@@ -287,5 +287,5 @@ class CalculatorFrame extends JFrame implements ActionListener {
 			else
 				result.setText(current.substring(0, lastIndex));
 		}
-	}
-} 
+	} 
+}

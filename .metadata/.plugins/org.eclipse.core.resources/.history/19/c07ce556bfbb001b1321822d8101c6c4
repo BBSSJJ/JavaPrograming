@@ -288,4 +288,4 @@ class CalculatorFrame extends JFrame implements ActionListener {
 				result.setText(current.substring(0, lastIndex));
 		}
 	}
-} 
+}
