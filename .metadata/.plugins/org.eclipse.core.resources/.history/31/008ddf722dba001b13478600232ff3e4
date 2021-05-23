@@ -1,0 +1,269 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+class Calculator extends JFrame implements ActionListener {
+	JButton[] btn = new JButton[24];
+	JTextField result = new JTextField(20);
+	double left = 0;
+	double right = 0;
+	char operation;
+	boolean numberInputFinished = false;
+	boolean afterResult = false;
+
+	Calculator() {
+		setTitle("계산기");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(550, 550);
+		setVisible(true);
+		setResizable(false);
+
+		Container c = getContentPane();
+		JPanel resultPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new GridLayout(6, 4, 5, 5));
+		resultPanel.setBackground(Color.gray);
+		buttonPanel.setBackground(Color.white);
+
+		btn[0] = new JButton("0");
+		btn[1] = new JButton("1");
+		btn[2] = new JButton("2");
+		btn[3] = new JButton("3");
+		btn[4] = new JButton("4");
+		btn[5] = new JButton("5");
+		btn[6] = new JButton("6");
+		btn[7] = new JButton("7");
+		btn[8] = new JButton("8");
+		btn[9] = new JButton("9");
+		btn[10] = new JButton(".");
+
+		btn[11] = new JButton("1/x");
+		btn[12] = new JButton("x^2");
+		btn[13] = new JButton("sqrt(x)");
+		btn[14] = new JButton("+/-");
+
+		btn[15] = new JButton("+");
+		btn[16] = new JButton("-");
+		btn[17] = new JButton("*");
+		btn[18] = new JButton("/");
+
+		btn[19] = new JButton("=");
+
+		btn[20] = new JButton("C");
+		btn[21] = new JButton("←");
+
+		btn[22] = new JButton("");
+		btn[23] = new JButton("");
+
+		for (int i = 0; i <= 21; i++) {
+			btn[i].addActionListener(this);
+		}
+
+		result.setEditable(false);
+		result.setText("" + 0);
+		result.setFont(new Font("바탕", Font.PLAIN, 25));
+		result.setHorizontalAlignment(JTextField.RIGHT);
+
+		// 패널에 버튼, textfield 추가하고, 팬에 패널 추가
+		resultPanel.add(result);
+
+		buttonPanel.add(btn[22]);
+		buttonPanel.add(btn[23]);
+		buttonPanel.add(btn[20]);
+		buttonPanel.add(btn[21]);
+
+		buttonPanel.add(btn[11]);
+		buttonPanel.add(btn[12]);
+		buttonPanel.add(btn[13]);
+		buttonPanel.add(btn[18]);
+
+		buttonPanel.add(btn[7]);
+		buttonPanel.add(btn[8]);
+		buttonPanel.add(btn[9]);
+		buttonPanel.add(btn[17]);
+
+		buttonPanel.add(btn[4]);
+		buttonPanel.add(btn[5]);
+		buttonPanel.add(btn[6]);
+		buttonPanel.add(btn[16]);
+
+		buttonPanel.add(btn[1]);
+		buttonPanel.add(btn[2]);
+		buttonPanel.add(btn[3]);
+		buttonPanel.add(btn[15]);
+
+		buttonPanel.add(btn[14]);
+		buttonPanel.add(btn[0]);
+		buttonPanel.add(btn[10]);
+		buttonPanel.add(btn[19]);
+
+		c.add(resultPanel, BorderLayout.NORTH);
+		c.add(buttonPanel, BorderLayout.CENTER);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JButton button = (JButton) e.getSource();
+		String current = result.getText(); // 현재 Text로 적혀있는 값을 가져온다
+
+		int idx = 0;
+		// btn 배열 중 클릭한 버튼이 몇번째 index인지 찾음
+		for (int i = 0; i <= 21; i++) {
+			if (btn[i] == button) {
+				idx = i;
+				break;
+			}
+		}
+
+		// 숫자
+		if (idx >= 0 && idx <= 9) {
+			if(afterResult) {
+				left = 0;
+				right = 0;
+				afterResult = false;
+				numberInputFinished = false;
+			}
+			if ((current.length() == 1 && current.charAt(0) == '0') || numberInputFinished) {
+				result.setText("" + idx);
+				numberInputFinished = false;
+			} else
+				result.setText(current + idx);
+		}
+
+		// 점
+		if (idx == 10) {
+			if (current.charAt(current.length() - 1) != '.')
+				result.setText(current + '.');
+		}
+
+		// 1항 연산자
+		if (idx >= 11 && idx <= 14) {
+			double num = Double.parseDouble(current);
+			numberInputFinished = true;
+			switch (idx) {
+			case 11:
+				num = 1 / num;
+				break;
+			case 12:
+				num *= num;
+				break;
+			case 13:
+				num = Math.sqrt(num);
+				break;
+			case 14:
+				num *= -1;
+				break;
+			}
+			result.setText("" + num);
+			if(left == 0) {
+				left = num;
+				right = 0;
+			}
+			else right = num;
+		}
+
+		// 2항 연산자
+		if (idx >= 15 && idx <= 18) {
+			if(left != 0) {
+				right = Double.parseDouble(current);
+				switch (operation) {
+				case '+':
+					result.setText("" + (left + right));
+					break;
+				case '-':
+					result.setText("" + (left - right));
+					break;
+				case '*':
+					result.setText("" + (left * right));
+					break;
+				case '/':
+					if (right == 0) {
+						result.setText("0으로 나눌 수 없습니다.");
+						left = 0;
+						right = 0;
+						return;
+					} else {
+						result.setText("" + (left / right));
+					}
+					break;
+				}
+				left = Double.parseDouble(result.getText());
+				right = 0;
+			}
+			else {
+				left = Double.parseDouble(current);
+			}
+			numberInputFinished = true;
+			switch (idx) {
+			case 15:
+				operation = '+';
+				break;
+			case 16:
+				operation = '-';
+				break;
+			case 17:
+				operation = '*';
+				break;
+			case 18:
+				operation = '/';
+				break;
+			}
+		}
+
+		// =
+		if (idx == 19) {
+			right = Double.parseDouble(current);
+			numberInputFinished = true;
+			switch (operation) {
+			case '+':
+				result.setText("" + (left + right));
+				break;
+			case '-':
+				result.setText("" + (left - right));
+				break;
+			case '*':
+				result.setText("" + (left * right));
+				break;
+			case '/':
+				if (right == 0) {
+					result.setText("0으로 나눌 수 없습니다.");
+					left = 0;
+					right = 0;
+					return;
+				} else {
+					result.setText("" + (left / right));
+				}
+				break;
+			}
+			left = Double.parseDouble(result.getText());
+			right = 0;
+			afterResult = true;
+		}
+
+		// Clear
+		if (idx == 20) {
+			result.setText("" + 0);
+			left = 0;
+			right = 0;
+		}
+
+		// Erase
+		if (idx == 21) {
+			int lastIndex = current.length() - 1;
+			if (lastIndex == 0 && current.charAt(lastIndex) == '0')
+				return;
+			else if (lastIndex == 0)
+				result.setText("" + 0);
+			else
+				result.setText(current.substring(0, lastIndex));
+		}
+	}
+}
+
+public class Task {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Calculator calculator = new Calculator();
+	}
+
+}

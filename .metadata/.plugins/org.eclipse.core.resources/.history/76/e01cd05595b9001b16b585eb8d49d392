@@ -1,0 +1,97 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+
+class Calculator2 extends JFrame {
+	JButton btnClear = new JButton("C");
+	JButton btnErase= new JButton("¡ç");
+	JButton btnReciprocal = new JButton("1/x");
+	JButton btnSquare = new JButton("x^2");
+	JButton btnRoot = new JButton("sqrt(x)");
+	JButton btnDivide = new JButton("/");
+	JButton btnMultiple = new JButton("*");
+	JButton btnMinus = new JButton("-");
+	JButton btnPlus = new JButton("+");
+	JButton btnResult = new JButton("=");
+	JButton btn0 = new JButton("0");
+	JButton btn1 = new JButton("1");
+	JButton btn2 = new JButton("2");
+	JButton btn3 = new JButton("3");
+	JButton btn4 = new JButton("4");
+	JButton btn5 = new JButton("5");
+	JButton btn6 = new JButton("6");
+	JButton btn7 = new JButton("7");
+	JButton btn8 = new JButton("8");
+	JButton btn9 = new JButton("9");
+	JButton btnDot = new JButton(".");
+	JButton btnSignChange = new JButton("+/-");
+	JButton btnDummy1 = new JButton("");
+	JButton btnDummy2 = new JButton("");
+	JTextField result = new JTextField(20);
+
+	Calculator2(){
+		setTitle("°è»ê±â");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(400, 400);
+		setVisible(true);
+		
+		
+		Container c = getContentPane();
+		JPanel resultPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new GridLayout(6, 4));
+		resultPanel.setBackground(Color.gray);
+		buttonPanel.setBackground(Color.black);
+		
+
+		
+		
+		
+	
+		
+		
+		resultPanel.add(result);
+		
+		buttonPanel.add(btnDummy1);
+		buttonPanel.add(btnDummy2);
+		buttonPanel.add(btnClear);
+		buttonPanel.add(btnErase);
+
+		buttonPanel.add(btnReciprocal);
+		buttonPanel.add(btnSquare);
+		buttonPanel.add(btnRoot);
+		buttonPanel.add(btnDivide);
+
+		buttonPanel.add(btn7);
+		buttonPanel.add(btn8);
+		buttonPanel.add(btn9);
+		buttonPanel.add(btnMultiple);
+
+		buttonPanel.add(btn4);
+		buttonPanel.add(btn5);
+		buttonPanel.add(btn6);
+		buttonPanel.add(btnMinus);
+
+		buttonPanel.add(btn1);
+		buttonPanel.add(btn2);
+		buttonPanel.add(btn3);
+		buttonPanel.add(btnPlus);
+
+		buttonPanel.add(btnSignChange);
+		buttonPanel.add(btn0);
+		buttonPanel.add(btnDot);
+		buttonPanel.add(btnResult);
+		
+		c.add(resultPanel, BorderLayout.NORTH);
+		c.add(buttonPanel, BorderLayout.CENTER);
+		
+	}
+}
+public class TaskPractice {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Calculator2 calculator = new Calculator2();
+	}
+
+}
